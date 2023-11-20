@@ -1,0 +1,37 @@
+	a {
+      font-size:14px;
+      font-weight:700
+    }
+    .superNav {
+      font-size:13px;
+    }
+    .form-control {
+      outline:none !important;
+      box-shadow: none !important;
+    }
+    @media screen and (max-width:540px){
+      .centerOnMobile {
+        text-align:center
+      }
+    }
+    body {
+        background-image: url('../static/images/background_intro.png'); 
+        background-size: cover; 
+        padding: 10px;
+        text-align: center;
+    }
+
+    #options {
+        padding: 20px;
+        background-color: #F5F7F8;
+        color: #706C61;
+        font:bold;
+    }
+
+    .link {
+        color: #1AACAC;
+        text-decoration: none;
+    }
+
+    
+    
