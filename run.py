@@ -66,6 +66,10 @@ def update_location():
     search_value=str(data['latitude'])+', '+str(data['longitude'])
     return render_template('service.html',pharmacies=pharmacies,hopitaux=hopitaux,search_value=search_value,getServiceIdForHospital=getServiceIdForHospital,getServiceIdForPharmacie=getServiceIdForPharmacie)
 
+@app.route('/aboutus')
+def aboutUs():
+    return render_template('ourteam.html')
+
 
 if __name__=='__main__':
     app.run(debug=True)
