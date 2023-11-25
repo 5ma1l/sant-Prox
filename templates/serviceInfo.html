@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Nom du Service
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Nom du Service</h1>
+    
+    <div class="row">
+        <div class="col-lg-6">
+          <img src="#" alt="Image du Service" class="img-fluid">
+        </div>
+        <div class="col-lg-6">
+          <h3>Description</h3>
+          <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestias quod praesentium amet veniam iusto inventore doloribus soluta, omnis rerum incidunt nemo accusantium dolorum aliquam aliquid recusandae. Cumque reiciendis quam fuga?</p>
+        </div>
+    </div>
+    
+    <hr>
+    
+    <h3>Contactez le service</h3>
+    <label for="contact">Envoyer au service :</label>
+    <textarea class="form-control" id="feedback" rows="3"></textarea>
+    <button type="submit" class="btn btn-primary">Envoyer le message</button>
+    
+    <hr>
+    
+    <h3>Retours</h3>
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Utilisateur 1</h5>
+        <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium eaque fugiat laudantium vero dicta ad voluptatem id sit commodi minus animi delectus possimus ipsam eos voluptatum, maiores adipisci totam maxime!</p>
+      </div>
+    </div>
+    
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Utilisateur 2</h5>
+        <p class="card-text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consequatur voluptates veniam nulla omnis sapiente quia maiores asperiores doloribus quo unde, ab autem architecto laboriosam magnam est fuga quod distinctio debitis?</p>
+      </div>
+    </div>    
+    <hr>
+    
+    <h3>Ajouter un retour</h3>
+    <form>
+      <div class="form-group">
+        <label for="feedback">Votre retour</label>
+        <textarea class="form-control" id="feedback" rows="3"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Envoyer le retour</button>
+    </form>
+  </div>
+{% endblock %}

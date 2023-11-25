@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Santé Prox | Urgence
+{% endblock %}
+
+{% block body %}
+  <section class="text-center">
+    <div class="container p-5">
+        <h1 style="color: red;"><i class="fa-solid fa-triangle-exclamation" style="color: #d11f31;"></i> URGENCE</h1>
+        <ul class="list-unstyled" id="messages">
+        </ul>
+        
+          <div class="form-outline">
+            <textarea class="form-control" id="textAreaExample2" rows="4"></textarea>
+            <label class="form-label" for="textAreaExample2"></label>
+          </div>
+
+        <button type="button" class="btn btn-success" onclick="addMessage()">Envoyer</button>
+        
+        <input type="file" id="imageInput" style="display: none;" accept="image/*">
+        <button type="button" class="btn btn-info" onclick="document.getElementById('imageInput').click();">Uploader une image</button>
+        
+        <button onclick="getLocation()"  type="button" class="btn btn-warning">Obtenir la localisation</button>
+        
+        <div id="selected_files"></div>
+    </div>
+  </section>
+
+  <script>
+    document.getElementById('imageInput').addEventListener('change', function () {
+      var fileInput = document.getElementById('imageInput');
+      var selectedFile = fileInput.files[0];
+
+      cont = document.getElementById("selected_files");
+      cont.innerHTML += `<p>Fichier sélectionné : ${selectedFile.name}</p>`;
+    });
+
+    function addMessage() {
+      m = document.getElementById("textAreaExample2").value;
+      document.getElementById("messages").innerHTML += `<li class="d-flex justify-content-between mb-4">
+              <img src="https://www.pngkey.com/png/detail/202-2024792_user-profile-icon-png-download-fa-user-circle.png" alt="avatar"
+                class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+              <div class="card">
+                <div class="card-header d-flex justify-content-between p-3">
+                  <p class="fw-bold mb-0">Nom d'utilisateur</p>
+                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> il y a un moment</p>
+                </div>
+                <div class="card-body">
+                  <p class="mb-0">
+                    ${m}
+                  </p>
+                </div>
+              </div>
+            </li>`;
+      document.getElementById("textAreaExample2").value = "";
+    }
+  </script>
+{% endblock %}

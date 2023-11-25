@@ -1,0 +1,18 @@
+body {
+    background-image: url('../images/background_intro.png');
+    background-size: cover; 
+    background-attachment: fixed;
+    text-align: center;
+}
+.bottom_section {
+    background-color: #F5F7F8;
+    color: #706C61;
+    position: static;
+    width: 100%;
+    bottom: 10px;
+}
+
+.link {
+    color: #1AACAC;
+    text-decoration: none;
+}

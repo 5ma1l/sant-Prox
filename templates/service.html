@@ -1,0 +1,47 @@
+
+{% extends "base.html" %}
+{% block body %}
+<link rel="stylesheet" href="{{ url_for('static',filename='styles/service.css') }}">
+<div class="container bootstrap snippets bootdey">
+    <hr>
+    <ol class="breadcrumb">
+        <h1><a href="#" class="link">Resultats De Recherche '{{search_value}}'</a></h1>
+    </ol>
+    <div class="row">
+        {% if hopitaux %}
+        <h2>Les hopitaux:</h2>
+            {% for hospital in hopitaux %}
+            <div class="well search-result">
+                <div class="row">
+                    <a href="{{ url_for('serviceinfo',id=getServiceIdForHospital(hospital.id)) }}">
+                        <div class="col-xs-6 col-sm-9 col-md-9 col-lg-10 title">
+                            <h5>{{ hospital.name }}</h5>
+                            <p>{{ hospital.ville }}<p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+    
+        {% endif %}
+        {% if pharmacies %}
+        <h2>les pharmacies:</h2>
+        <ul>
+            {% for pharmacy in pharmacies %}
+            <div class="well search-result">
+                <div class="row">
+                    <a href="{{ url_for('serviceinfo',id=getServiceIdForPharmacie(pharmacy.id)) }}">
+                        <div class="col-xs-6 col-sm-9 col-md-9 col-lg-10 title">
+                            <h5>{{ pharmacy.name }}</h5>
+                            <p>{{ pharmacy.address }}<p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        {% endif %}
+        <p>No results found for '{{ search_value }}'.</p>
+    </div>
+</div>
+<br>
+{% endblock %}

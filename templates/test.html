@@ -1,0 +1,33 @@
+
+{% extends "base.html" %}
+{% block body %}
+<link rel="stylesheet" href="{{ url_for('static',filename='styles/service.css') }}">
+<div class="container bootstrap snippets bootdey">
+    <hr>
+    <ol class="breadcrumb">
+        <h1><a href="#" class="link">Resultats De Recherche '{{search_value}}'</a></h1>
+    </ol>
+    <div class="row">
+        {% if hopitaux %}
+        <h2>Les hopitaux:</h2>
+        <ul>
+
+            {% for hospital in hopitaux %}
+                <li>{{ hospital.name }} - {{ hospital.ville }}</li>
+            {% endfor %}
+        </ul>
+    
+        {% endif %}
+        {% if pharmacies %}
+        <h2>les pharmacies:</h2>
+        <ul>
+            {% for pharmacy in pharmacies %}
+                <li>{{ pharmacy.name }} - {{ pharmacy.address }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <p>No results found for '{{ search_value }}'.</p>
+    </div>
+</div>
+<br>
+{% endblock %}

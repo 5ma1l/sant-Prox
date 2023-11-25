@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Profile
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles_user.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-3 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://www.pngkey.com/png/detail/157-1579943_no-profile-picture-round.png"><span class="font-weight-bold">User</span><span class="text-black-50">User@mail.com.my</span><span> </span></div>
+        </div>
+        <div class="col-md-9 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Profile Settings</h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12"><label class="labels">Username</label><input type="text" class="form-control" placeholder="entrez username" value=""></div>
+                    <div class="col-md-12"><label class="labels">Addresse Mail</label><input type="text" class="form-control" placeholder="entrez addresse mail" value=""></div>
+                    <div class="col-md-12"><label class="labels">No de telephone</label><input type="text" class="form-control" placeholder="entrez le numero de telephone" value=""></div>
+                    <div class="col-md-12"><label class="labels">Le nom complet</label><input type="text" class="form-control" placeholder="entrez le nom complet" value=""></div>
+                    <div class="col-md-12"><label class="labels">password</label><input type="password" class="form-control" placeholder="entrez le password" value=""></div>
+                    <div class="col-md-12"><label class="labels">repetez password</label><input type="password" class="form-control" placeholder="entrez le password" value=""></div>
+                   
+                    <div class="col-md-12">
+                        <label class="labels">Pour verifer votre identié (id card/Passport ...)</label>
+                        <input class="form-control" type="file" id="formFile">
+                      </div>
+
+
+
+                </div>
+                <div class="mt-5 text-center"><button class="btn btn-secondary profile-button" type="button">Save Profile</button></div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
+<div class="border-bottom p-4">
+    <a href="" class="link">
+    <h2>
+        Messagerie
+    </h2>
+    </a>
+</div>
+
+<br>
+
+<div class="p-4">
+    <h2 style="color: red;"><i class="fa-solid fa-triangle-exclamation" style="color: #d11f31;"></i> URGENCE demande</h2>
+    
+    <div class="row">
+      <div class="col-lg-12">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias facilis recusandae veritatis ipsum amet ab labore corrupti dignissimos quaerat voluptas, tempore perspiciatis asperiores neque et libero sed hic similique accusantium.</p>
+      </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-6">
+          <button type="button" class="btn btn-success">Yes</button>
+        </div>
+        <div class="col-lg-6">
+          <button type="button" class="btn btn-danger">No</button>
+        </div>
+      </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/signup.css') }}">
+
+<div class="container-signup">
+  <div class="title">Inscription</div>
+  <div class="content">
+    <form action="#">
+      <div class="user-details">
+        <div class="input-box">
+          <label for="full-name" class="details">Nom complet</label>
+          <input type="text" id="full-name" placeholder="Entrez votre nom" required>
+        </div>
+        <div class="input-box">
+          <label for="username" class="details">Nom d'utilisateur</label>
+          <input type="text" id="username" placeholder="Entrez votre nom d'utilisateur" required>
+        </div>
+        <div class="input-box">
+          <label for="email" class="details">Email</label>
+          <input type="email" id="email" placeholder="Entrez votre adresse email" required>
+        </div>
+        <div class="input-box">
+          <label for="phone" class="details">Numéro de téléphone</label>
+          <input type="tel" id="phone" placeholder="Entrez votre numéro de téléphone" required>
+        </div>
+        <div class="input-box">
+          <label for="password" class="details">Mot de passe</label>
+          <input type="password" id="password" placeholder="Entrez votre mot de passe" required>
+        </div>
+        <div class="input-box">
+          <label for="confirm-password" class="details">Confirmer le mot de passe</label>
+          <input type="password" id="confirm-password" placeholder="Confirmez votre mot de passe" required>
+        </div>
+      </div>
+      
+      <div class="button">
+        <input type="submit" value="S'inscrire">
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
