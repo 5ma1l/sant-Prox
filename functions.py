@@ -1,5 +1,7 @@
 from main import *
 from math import radians, sin, cos, sqrt, atan2
+import re
+from werkzeug.security import generate_password_hash, check_password_hash
 
 def haversine(lat1, lon1, lat2, lon2):
     lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
@@ -44,9 +46,70 @@ def getServiceIdForHospital(id):
 
 
 def update_location(data):
-    search_value=str(data['latitude'])+', '+str(data['longitude'])
+    location=str(data['latitude'])+', '+str(data['longitude'])
     if current_user.is_authenticated:
         user=Users.query.get(current_user.id)
-        user.location=search_value
+        user.location=location
         db.session.commit()
         login_user(user)
+
+
+def is_valid_password(password):
+    if len(password) < 8:
+        flash("Le mot de passe doit comporter au moins 8 caractères.", category='error')
+        return False
+
+    if not any(char.isupper() for char in password):
+        flash("Le mot de passe doit contenir au moins une lettre majuscule.", category='error')
+        return False
+
+    if not any(char.islower() for char in password):
+        flash("Le mot de passe doit contenir au moins une lettre minuscule.", category='error')
+        return False
+
+    if not any(char.isdigit() for char in password):
+        flash("Le mot de passe doit contenir au moins un chiffre.", category='error')
+        return False
+
+    return True
+
+def is_valid_signup(full_name, email, phone_number, password1, password2):
+    if Users.query.filter_by(email=email).first():
+        flash('Email already exists.', category='error')
+        return False
+
+    if len(full_name) < 4:
+        flash("Full name must be greater than 3 characters.", category='error')
+        return False
+
+    if not re.match(r'^\d{10}$', phone_number):
+        flash('Phone number is not correct.', category='error')
+        return False
+
+    if password1 != password2:
+        flash("Passwords don't match.", category='error')
+        return False
+
+    if len(password1) < 8:
+        flash("Password must be at least 8 characters.", category='error')
+        return False
+
+    return True
+
+def update_user_profile(username, email, telephone, fullname, password):
+    if username:
+        current_user.username = username
+
+    if email:
+        current_user.email = email
+
+    if telephone:
+        current_user.phone_number = telephone
+
+    if fullname:
+        current_user.full_name = fullname
+
+    if password:
+        current_user.password = generate_password_hash(password)
+
+    db.session.commit()

@@ -42,21 +42,21 @@ class Pharmacie(db.Model):
     def __repr__(self):
         return f"Pharmacie(id={self.id}, name={self.name}, address={self.address},city={self.city},location={self.location},phone_number={self.phone_number}"
 
-class Users(db.Model,UserMixin):
+class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, nullable=False)
-    email = db.Column(db.String, nullable=False)
+    username = db.Column(db.String, unique=True, nullable=False)
+    email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
     type = db.Column(db.String, default='client', nullable=False)
-    full_name = db.Column(db.String,nullable=False)
+    full_name = db.Column(db.String, nullable=False)
     phone_number = db.Column(db.Integer)
     location = db.Column(db.String)
     ville = db.Column(db.String)
     date_inscription = db.Column(db.Date, default=datetime.utcnow, nullable=False)
     media_id = db.Column(db.Integer, default=3, nullable=False)
+
     def __repr__(self):
         return f"User(id={self.id}, username={self.username}, email={self.email}, password={self.password}, Fullname={self.full_name}, Type={self.type}, Phone={self.phone_number}, location={self.location}, ville={self.ville}, date_inscription={self.date_inscription}, media_id={self.media_id})"
-
 
 class Media(db.Model):
     id = db.Column(db.Integer, primary_key=True)
