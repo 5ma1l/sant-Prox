@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'base.html' if current_user==None and corrent_user.type=='client' else 'baseService.html' %}
 
 {% block title %}
     Santé Prox | Urgence
@@ -58,7 +58,7 @@
         <th>ID</th>
         <th>Description</th>
         <th>Image</th>
-        {% if type=="client" %}
+        {% if current_user.type=="client" %}
             <th>Service</th>
         {% else %}
             <th>Location du client</th>
@@ -74,7 +74,7 @@
             {% else %}
                 <td></td>
             {% endif %}
-            {% if type=="client" %}
+            {% if current_user.type=="client" %}
                 <td>{{ "Hopital" + " " +emergency.hospital_name }}
                     <a href="https://www.google.com/maps/place/emergency."></a>
                 </td>
@@ -92,7 +92,7 @@
         </tr>
     {% endfor %}
     </table>
-    {% if type=="client" %}
+    {% if current_user.type=="client" %}
     <a class="red-button" href="/send-emergency">New Emergency</a>
     {% endif %}
     <script>
