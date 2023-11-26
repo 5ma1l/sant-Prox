@@ -113,3 +113,7 @@ def update_user_profile(username, email, telephone, fullname, password):
         current_user.password = generate_password_hash(password)
 
     db.session.commit()
+
+def get_username(user_id):
+    user = Users.query.filter_by(id=user_id).first()
+    return user

@@ -6,8 +6,10 @@ import re
 
 @app.route('/')
 def home():
+    if current_user.is_authenticated :
+        if current_user.type!='client':
+            return redirect(url_for('profile'))
     return render_template('home.html')
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -92,29 +94,32 @@ def emergency():
 @app.route('/send-emergency', methods=['POST','GET'])
 def add_urgence():
     if current_user.is_authenticated:
-        if request.method=='GET':
-            return render_template("emergency.html")
+        if current_user.type=='client':
+            if request.method=='GET':
+                return render_template("emergency.html")
+            else:
+                user = current_user
+                description = request.form['message']
+                location = json.loads(request.form['location'])
+                filename=None
+
+                if 'image' in request.files:
+                    image = request.files['image']
+                    if image.filename != '':
+                        filename = secure_filename(image.filename)
+                        image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+                localisation=(location["latitude"],location["longitude"])
+                hospital=getClosestServices(localisation[0],localisation[1],service_type='Hopital',num_services=1)['Hopitaux'][0][0]
+                service=Services.query.filter_by(hospital_id=hospital.id).first()
+
+                new_urgence = Urgence(description=description, image=filename, localisation=str(localisation), service_id=service.id, user_id=user.id, statut="attendre la décision du service")
+                db.session.add(new_urgence)
+                db.session.commit()
+
+                return redirect(url_for('emergency'))
         else:
-            user = current_user
-            description = request.form['message']
-            location = json.loads(request.form['location'])
-            filename=None
-
-            if 'image' in request.files:
-                image = request.files['image']
-                if image.filename != '':
-                    filename = secure_filename(image.filename)
-                    image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-            localisation=(location["latitude"],location["longitude"])
-            hospital=getClosestServices(localisation[0],localisation[1],service_type='Hopital',num_services=1)['Hopitaux'][0][0]
-            service=Services.query.filter_by(hospital_id=hospital.id).first()
-
-            new_urgence = Urgence(description=description, image=filename, localisation=str(localisation), service_id=service.id, user_id=user.id, statut="attendre la décision du service")
-            db.session.add(new_urgence)
-            db.session.commit()
-
-            return redirect(url_for('emergency'))
+            redirect(url_for('profile'))
     else:
         return redirect(url_for("login"))
 
@@ -124,8 +129,11 @@ def forgetpassword():
         return redirect(url_for("home"))
     return render_template('forgetpassword.html')
 
-@app.route('/service',methods=['POST'])
+@app.route('/service',methods=['GET','POST'])
 def service():
+    if current_user.is_authenticated :
+        if current_user.type!='client':
+            return redirect(url_for('home'))
     data=request.form
     keys=list(data.keys())
     if 'type' in keys and  data['latitude']!='':
@@ -149,12 +157,25 @@ def service():
         return render_template('service.html',pharmacies=pharmacies,hopitaux=hopitaux,search_value=search_value,getServiceIdForHospital=getServiceIdForHospital,getServiceIdForPharmacie=getServiceIdForPharmacie)
 
 @app.route('/serviceinfo/<id>')
+@app.route('/service/<id>',methods=['GET','POST'])
+@login_required
 def serviceinfo(id):
-    service={
-    'pharmacie':['rabat'],
-    'hospital':['casa']
-}
-    return render_template('serviceinfo.html',service=service)
+    if current_user.is_authenticated :
+        if current_user.type!='client':
+            return redirect(url_for('home'))
+    comment=[]
+    user=current_user
+    service = Services.query.filter_by(id=id).first()
+    if service:
+        pharmacie = Pharmacie.query.filter_by(id=service.pharmacie_id).first()
+        hopital = Hospitals.query.filter_by(id=service.hospital_id).first()
+    if request.method == 'POST':
+        comment= request.form['comment']
+        avis = Avis( commentaire=comment,user_id=user.id,service_id=id)
+        db.session.add(avis)
+        db.session.commit()
+    comments=Avis.query.filter_by(service_id=id)
+    return render_template('serviceinfo.html', pharmacie=pharmacie, hopital=hopital,comments=comments,get_username=get_username,id=id)
 
 @app.route('/profile')
 @login_required
@@ -206,4 +227,4 @@ def aboutUs():
 
 
 if __name__=='__main__':
-    app.run(debug=True,port=8080)
+    app.run(debug=True)
