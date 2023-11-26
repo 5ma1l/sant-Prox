@@ -1,14 +1,14 @@
 from main import *
 from functions import *
+from werkzeug.utils import secure_filename
+import json
 
 @app.route('/')
 def home():
-    g.connected=False
+    g.connected=True
     return render_template('home.html')
 
-@app.route('/emergency')
-def emergency():
-    return render_template('emergency.html')
+
 
 @app.route('/login')
 def login():
@@ -17,6 +17,73 @@ def login():
 @app.route('/signup')
 def signup():
     return render_template('signup.html')
+
+
+@app.route('/emergency', methods=['POST','GET'])
+def emergency():
+    session["username"]="test"
+    if "username" in session:
+        if request.method=='GET':
+            user = Users.query.filter_by(username=session["username"]).first()
+            type=user.type
+            if type=="client":
+                emergencies=Urgence.query.filter_by(user_id=user.id).all()
+                hospital=None
+                if emergencies:
+                    for emergency in emergencies:
+                        service=Services.query.filter_by(id=emergency.service_id).first()
+                        hospital=Hospitals.query.filter_by(id=service.hospital_id).first()
+                        emergency.hospital_name=hospital.name
+                        emergency.ville=hospital.ville
+                return render_template("emergency_historique.html",emergencies=emergencies,type=type)
+            else:
+                hospital=Hospitals.query.filter_by(name=session["username"]).first()
+                service=Services.query.filter_by(hospital_id=hospital.id).first()
+                emergencies=Urgence.query.filter_by(service_id=service.id).all()
+                return render_template("emergency_historique.html",emergencies=emergencies,type=user)
+        else:
+            data = request.get_json()
+            emergency_id = data.get('emergency_id')
+            action = data.get('action')
+
+            emergency = Urgence.query.get(emergency_id)
+            if emergency:
+                emergency.statut = action
+                db.session.commit()
+            return redirect(url_for("emergency"))
+
+    else:
+        return redirect(url_for("login"))
+
+@app.route('/send-emergency', methods=['POST','GET'])
+def add_urgence():
+    if "username" in session:
+        if request.method=='GET':
+            return render_template("emergency.html")
+        else:
+            user = Users.query.filter_by(username=session["username"]).first()
+
+            description = request.form['message']
+            location = json.loads(request.form['location'])
+            filename=None
+
+            if 'image' in request.files:
+                image = request.files['image']
+                if image.filename != '':
+                    filename = secure_filename(image.filename)
+                    image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+            localisation=(location["latitude"],location["longitude"])
+            hospital=getClosestServices(localisation[0],localisation[1],service_type='Hopital',num_services=1)['Hopitaux'][0][0]
+            service=Services.query.filter_by(hospital_id=hospital.id).first()
+
+            new_urgence = Urgence(description=description, image=filename, localisation=str(localisation), service_id=service.id, user_id=user.id, statut="attendre la décision du service")
+            db.session.add(new_urgence)
+            db.session.commit()
+
+            return redirect(url_for('emergency'))
+    else:
+        return redirect(url_for("login"))
 
 @app.route('/forgetpassword')
 def forgetPassword():

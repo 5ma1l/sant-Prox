@@ -20,7 +20,6 @@ def getClosestServices(user_lat, user_lon, service_type='Tout', num_services=5):
         'Pharmacies':None,
         'Hopitaux':None
     }
-    print(service_type)
     if service_type.title() in ('Pharmacie','Tout'):
         services['Pharmacies']=Pharmacie.query.all()
         distances = [(service, haversine(user_lat, user_lon, float(service.location.split(',')[0]), float(service.location.split(',')[1])))

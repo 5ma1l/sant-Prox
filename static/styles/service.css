@@ -45,3 +45,8 @@ body{
     border-color: #00838f !important;
     box-shadow: none;
 }
+
+.smaller-image {
+    max-width: 20%;
+    height: auto;
+  }

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Santé Prox | Urgence
+{% endblock %}
+
+{% block head%}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+
+    h1 {
+        color: #333;
+    }
+
+    table {
+        width: 80%;
+        margin: 20px auto;
+        border-collapse: collapse;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+        padding: 15px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #3498db;
+        color: #fff;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #e0e0e0;
+    }
+
+    .red-button {
+            background-color: #e74c3c;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 5px;
+    }
+</style>
+{%endblock%}
+
+{% block body %}
+    <h1>Emergency Data</h1>
+    <table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Description</th>
+        <th>Image</th>
+        {% if type=="client" %}
+            <th>Service</th>
+        {% else %}
+            <th>Location du client</th>
+        {% endif %}
+        <th>Statut</th>
+    </tr>
+    {% for emergency in emergencies %}
+        <tr>
+            <td>{{ emergency.id }}</td>
+            <td>{{ emergency.description }}</td>
+            {% if emergency.image %}
+                <td><a href="{{ url_for('static', filename='images/' + emergency.image) }}" target="_blank">{{ emergency.image }}</a></td>
+            {% else %}
+                <td></td>
+            {% endif %}
+            {% if type=="client" %}
+                <td>{{ "Hopital" + " " +emergency.hospital_name }}
+                    <a href="https://www.google.com/maps/place/emergency."></a>
+                </td>
+                <td>{{ emergency.statut }}</td>
+            {% else %}
+                <td><a href="https://www.google.com/maps/place/{{emergency.localisation}}"><i class="fa-solid fa-map-location-dot" style="color: #25985c;"></i></a> {{ emergency.localisation }}</td>
+                {% if emergency.statut=="attendre la décision du service" %}
+                    <td id="buttons"><button type="button" class="btn btn-success" onclick="submitAction('{{ emergency.id }}', 'accepted')">Accept</button>
+                        <button type="button" class="btn btn-danger" onclick="submitAction('{{ emergency.id }}', 'declined')">Refuse</button>
+                    </td>
+                {% else %}
+                    <td id={{ emergency.id }}>{{ emergency.statut }}</td>
+                {%endif%}
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </table>
+    {% if type=="client" %}
+    <a class="red-button" href="/send-emergency">New Emergency</a>
+    {% endif %}
+    <script>
+        function submitAction(emergencyId, action) {
+            fetch('/emergency', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 'emergency_id': emergencyId, 'action': action })
+            })
+            .then(data => {
+                console.log("rcv")
+                document.getElementById("buttons").innerText=action
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        }
+    </script>
+{% endblock %}

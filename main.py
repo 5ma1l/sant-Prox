@@ -1,8 +1,12 @@
-from flask import Flask,render_template,url_for,g,request
+from flask import Flask,render_template,url_for,g,request,redirect,session
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 app=Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///sante_prox.db"
+app.config['UPLOAD_FOLDER'] = 'static/images'
+secret=os.urandom(16)
+app.secret_key=secret
 db = SQLAlchemy(app)
 
 class Hospitals(db.Model):
@@ -32,14 +36,15 @@ class Users(db.Model):
     username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
-    isAdmin = db.Column(db.Integer)
+    type = db.Column(db.String,nullable=False)
+    full_name = db.Column(db.String,nullable=False)
+    phone_number = db.Column(db.Integer)
     location = db.Column(db.String)
     ville = db.Column(db.String)
     date_inscription = db.Column(db.Date, nullable=False)
     media_id = db.Column(db.Integer, nullable=False)
-
     def __repr__(self):
-        return f"User(id={self.id}, username={self.username}, email={self.email}, password={self.password}, isAdmin={self.isAdmin}, location={self.location}, ville={self.ville}, date_inscription={self.date_inscription}, media_id={self.media_id})"
+        return f"User(id={self.id}, username={self.username}, email={self.email}, password={self.password}, Fullname={self.Fullname}, Type={self.type}, Phone={self.phone_number}, location={self.location}, ville={self.ville}, date_inscription={self.date_inscription}, media_id={self.media_id})"
 
 
 class Media(db.Model):
@@ -72,9 +77,12 @@ class Discussion(db.Model):
 
 class Urgence(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String, nullable=False)
+    description = db.Column(db.String, nullable=True)
     user_id = db.Column(db.Integer, nullable=True)
+    image= db.Column(db.String, nullable=True)
+    localisation=db.Column(db.String, nullable=True)
     service_id = db.Column(db.Integer, nullable=True)
+    statut= db.Column(db.String, nullable=False)
 
     def __repr__(self):
         return f"Urgence(id={self.id}, description={self.description}, user_id={self.user_id}, service_id={self.service_id})"
