@@ -1,6 +1,9 @@
-from flask import Flask,render_template,url_for,g,request,redirect,session
+from flask import Flask,render_template,url_for,g,request,redirect,flash
 from flask_sqlalchemy import SQLAlchemy
 import os
+from flask_login import UserMixin,login_required,logout_user,current_user,login_user,LoginManager
+from datetime import datetime
+
 
 app=Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///sante_prox.db"
@@ -8,6 +11,14 @@ app.config['UPLOAD_FOLDER'] = 'static/images'
 secret=os.urandom(16)
 app.secret_key=secret
 db = SQLAlchemy(app)
+
+login_manager=LoginManager()
+login_manager.init_app(app)
+login_manager.login_view='login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(user_id)
 
 class Hospitals(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -31,20 +42,20 @@ class Pharmacie(db.Model):
     def __repr__(self):
         return f"Pharmacie(id={self.id}, name={self.name}, address={self.address},city={self.city},location={self.location},phone_number={self.phone_number}"
 
-class Users(db.Model):
+class Users(db.Model,UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
-    type = db.Column(db.String,nullable=False)
+    type = db.Column(db.String, default='client', nullable=False)
     full_name = db.Column(db.String,nullable=False)
     phone_number = db.Column(db.Integer)
     location = db.Column(db.String)
     ville = db.Column(db.String)
-    date_inscription = db.Column(db.Date, nullable=False)
-    media_id = db.Column(db.Integer, nullable=False)
+    date_inscription = db.Column(db.Date, default=datetime.utcnow, nullable=False)
+    media_id = db.Column(db.Integer, default=3, nullable=False)
     def __repr__(self):
-        return f"User(id={self.id}, username={self.username}, email={self.email}, password={self.password}, Fullname={self.Fullname}, Type={self.type}, Phone={self.phone_number}, location={self.location}, ville={self.ville}, date_inscription={self.date_inscription}, media_id={self.media_id})"
+        return f"User(id={self.id}, username={self.username}, email={self.email}, password={self.password}, Fullname={self.full_name}, Type={self.type}, Phone={self.phone_number}, location={self.location}, ville={self.ville}, date_inscription={self.date_inscription}, media_id={self.media_id})"
 
 
 class Media(db.Model):

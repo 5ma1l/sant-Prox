@@ -21,7 +21,6 @@ function getLocation() {
                 latitudeInput.value = position.coords.latitude;
                 longitudeInput.value = position.coords.longitude;
                 $('#advanced_filter').collapse('show'); 
-                sendLocation(position);
             },
             function (error) {
                 console.error("Error getting location:", error.message);
@@ -30,16 +29,4 @@ function getLocation() {
     } else {
         alert("Geolocation is not supported by this browser.");
     }
-}
-
-function sendLocation(position) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/update_location", true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-
-    var data = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-    };
-    xhr.send(JSON.stringify(data));
 }

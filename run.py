@@ -1,30 +1,82 @@
 from main import *
 from functions import *
 from werkzeug.utils import secure_filename
+from werkzeug.security import generate_password_hash, check_password_hash
 import json
 
 @app.route('/')
 def home():
-    g.connected=True
     return render_template('home.html')
 
-
-
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    elif request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
 
-@app.route('/signup')
+        user = Users.query.filter_by(email=email).first()
+        if user:
+            if check_password_hash(user.password, password):
+                login_user(user)
+                flash('Logged in succefully!', category='success')
+                return redirect(url_for('home'))
+
+        flash('Your credential is an incorrect.', category='error')
+        return redirect(url_for('login'))
+    else:
+        return render_template("login.html",Text='')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+
+@app.route('/sign_up', methods=['GET', 'POST'])
 def signup():
-    return render_template('signup.html')
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    if request.method == 'POST':
+        full_name = request.form.get('fullName')
+        username = request.form.get('username')
+        email = request.form.get('email')
+        phone_number = request.form.get('phoneNumber')
+        password1 = request.form.get('password1')
+        password2 = request.form.get('password2')
+
+        user = Users.query.filter_by(email=email).first()
+        if user:
+             flash('Email already exists.', category='error')
+        if len(full_name) < 4:
+            flash("Full name must be greater than 3 character.", category='error')
+        elif len(email) < 5:
+            flash('Email is too short.', category='error')
+        elif len(phone_number) != 10:
+            flash('Phone number is not correct.', category='error')
+        elif password1 != password2:
+            flash("Passwords don't match.", category='error')
+        elif len(password1) < 8:
+            flash("Password must be at least 7 characters.", category='error')
+        else:
+            new_user = Users(email=email, full_name=full_name, username=username, phone_number=phone_number, password=generate_password_hash(password1))
+            db.session.add(new_user)
+            db.session.commit()
+            flash("Account created!", category='success')
+            
+            return redirect(url_for('home'))
+
+    return render_template("signup.html")
 
 
 @app.route('/emergency', methods=['POST','GET'])
+@login_required
 def emergency():
-    session["username"]="test"
-    if "username" in session:
+    if current_user.is_authenticated:
         if request.method=='GET':
-            user = Users.query.filter_by(username=session["username"]).first()
+            user = current_user
             type=user.type
             if type=="client":
                 emergencies=Urgence.query.filter_by(user_id=user.id).all()
@@ -37,7 +89,7 @@ def emergency():
                         emergency.ville=hospital.ville
                 return render_template("emergency_historique.html",emergencies=emergencies,type=type)
             else:
-                hospital=Hospitals.query.filter_by(name=session["username"]).first()
+                hospital=Hospitals.query.filter_by(name=current_user).first()
                 service=Services.query.filter_by(hospital_id=hospital.id).first()
                 emergencies=Urgence.query.filter_by(service_id=service.id).all()
                 return render_template("emergency_historique.html",emergencies=emergencies,type=user)
@@ -57,12 +109,11 @@ def emergency():
 
 @app.route('/send-emergency', methods=['POST','GET'])
 def add_urgence():
-    if "username" in session:
+    if current_user.is_authenticated:
         if request.method=='GET':
             return render_template("emergency.html")
         else:
-            user = Users.query.filter_by(username=session["username"]).first()
-
+            user = current_user
             description = request.form['message']
             location = json.loads(request.form['location'])
             filename=None
@@ -86,7 +137,7 @@ def add_urgence():
         return redirect(url_for("login"))
 
 @app.route('/forgetpassword')
-def forgetPassword():
+def forgetpassword():
     return render_template('forgetpassword.html')
 
 @app.route('/service',methods=['POST'])
@@ -94,6 +145,7 @@ def service():
     data=request.form
     keys=list(data.keys())
     if 'type' in keys and  data['latitude']!='':
+        update_location(data)
         services=getClosestServices(float(data['latitude']),float(data['longitude']),data['type'])
         pharmacies=[service for service, _ in services['Pharmacies']] if services['Pharmacies']!=None else None
         hopitaux=[service for service, _ in services['Hopitaux']] if services['Hopitaux']!=None else None
@@ -124,15 +176,7 @@ def serviceinfo(id):
 def profile():
     return render_template('profile.html')
 
-@app.route('/update_location', methods=['POST'])
-def update_location():
-    data = request.get_json()
-    services=getClosestServices(float(data['latitude']),float(data['longitude']))
-    pharmacies=[service for service, _ in services['Pharmacies']] if services['Pharmacies']!=None else None
-    hopitaux=[service for service, _ in services['Hopitaux']] if services['Hopitaux']!=None else None
-    search_value=str(data['latitude'])+', '+str(data['longitude'])
-    return render_template('service.html',pharmacies=pharmacies,hopitaux=hopitaux,search_value=search_value,getServiceIdForHospital=getServiceIdForHospital,getServiceIdForPharmacie=getServiceIdForPharmacie)
-
+ 
 @app.route('/aboutus')
 def aboutUs():
     return render_template('ourteam.html')

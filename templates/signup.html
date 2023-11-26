@@ -1,45 +1,96 @@
 {% extends "base.html" %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}Sign Up{% endblock %}
 
 {% block body %}
-<link rel="stylesheet" href="{{ url_for('static', filename='styles/signup.css') }}">
+<!--
+<form method="POST">
+    <h3 align="center">Sign Up</h3>
+    <div class="form-group">
+        <label for="email">Email Address</label>
+        <input 
+        type="email" 
+        class="form-control" 
+        name="email" 
+        id="email" 
+        placeholder="Enter email"
+        >
+    </div>
+    <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input 
+        type="text" 
+        class="form-control" 
+        name="firstName" 
+        id="firstName" 
+        placeholder="Enter first name"
+        >
+    </div>
+    <div class="form-group">
+        <label for="password1">Password</label>
+        <input 
+        type="password" 
+        class="form-control" 
+        name="password1" 
+        id="password1" 
+        placeholder="Entrez password"
+        >
+    </div>
+    <div class="form-group">
+        <label for="password2">Confirm password</label>
+        <input 
+        type="password" 
+        class="form-control" 
+        name="password2" 
+        id="password2" 
+        placeholder="Confirm password"
+        >
+    </div>
+    <br/>
 
-<div class="container-signup">
-  <div class="title">Inscription</div>
-  <div class="content">
-    <form action="#">
-      <div class="user-details">
-        <div class="input-box">
-          <label for="full-name" class="details">Nom complet</label>
-          <input type="text" id="full-name" placeholder="Entrez votre nom" required>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    
+
+</form>
+-->
+  
+  <link rel="stylesheet" href="{{ url_for('static',filename='styles/signup.css') }}">
+  <div class="container-signup">
+    <div class="title">Registration</div>
+    <div class="content">
+      <form method="POST">
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details">Full Name</span>
+            <input type="text" name="fullName" id="fullName" placeholder="Enter your name" required>
+          </div>
+          <div class="input-box ">
+            <span class="details">Username</span>
+            <input type="text" name="username" id="username" placeholder="Enter your username" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Email</span>
+            <input type="email" name="email" id="email" placeholder="Enter your email" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Phone Number</span>
+            <input type="tel" name="phoneNumber" id="phoneNumber" placeholder="Enter your number" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Password</span>
+            <input type="password" name="password1" id="password1" placeholder="Enter your password" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Confirm Password</span>
+            <input type="password" name="password2" id="password2" placeholder="Confirm your password" required>
+          </div>
         </div>
-        <div class="input-box">
-          <label for="username" class="details">Nom d'utilisateur</label>
-          <input type="text" id="username" placeholder="Entrez votre nom d'utilisateur" required>
+        
+        <div class="button">
+          <input type="submit" value="Register">
         </div>
-        <div class="input-box">
-          <label for="email" class="details">Email</label>
-          <input type="email" id="email" placeholder="Entrez votre adresse email" required>
-        </div>
-        <div class="input-box">
-          <label for="phone" class="details">Numéro de téléphone</label>
-          <input type="tel" id="phone" placeholder="Entrez votre numéro de téléphone" required>
-        </div>
-        <div class="input-box">
-          <label for="password" class="details">Mot de passe</label>
-          <input type="password" id="password" placeholder="Entrez votre mot de passe" required>
-        </div>
-        <div class="input-box">
-          <label for="confirm-password" class="details">Confirmer le mot de passe</label>
-          <input type="password" id="confirm-password" placeholder="Confirmez votre mot de passe" required>
-        </div>
-      </div>
-      
-      <div class="button">
-        <input type="submit" value="S'inscrire">
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-</div>
+
 {% endblock %}
