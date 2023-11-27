@@ -6,8 +6,8 @@
 
 ### Back-end
 
--Python
--Flask
+-Python.
+-Flask.
 
 ### Base de données
 
