@@ -37,3 +37,6 @@
     ```
 
 Accédez à l'application à [http://localhost:5000](http://localhost:5000).
+
+video demo:
+https://drive.google.com/file/d/1_2ziuOUUAUltM7Xw2wpjx2XhfTJMUdrL/view?usp=sharing
