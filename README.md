@@ -4,10 +4,16 @@
 
 ## Fonctionnalités Clés
 
+### Back-end
+
+-Python
+-Flask
+
 ### Base de données
 
 - Base de données SQLite3 avec liaison SQLAlchemy.
 - Tables pour les hôpitaux, les pharmacies, les utilisateurs, les services, les urgences, les médias et les avis.
+- Données issues du scrapping de https://www.annuaire-gratuit.ma, https://data.gov.ma/data/fr/dataset/la-liste-des-hopitaux, et requètes vers google maps.
 
 ### Interfaces
 
