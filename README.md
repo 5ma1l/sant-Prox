@@ -6,7 +6,6 @@
 
 ### Back-end
 
--Python.
 -Flask.
 
 ### Base de données
