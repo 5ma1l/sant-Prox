@@ -13,10 +13,11 @@
 - Base de données SQLite3 avec liaison SQLAlchemy.
 - Tables pour les hôpitaux, les pharmacies, les utilisateurs, les services, les urgences, les médias et les avis.
 - Données issues du scrapping de https://www.annuaire-gratuit.ma, https://data.gov.ma/data/fr/dataset/la-liste-des-hopitaux, et requètes vers google maps.
+- le code de scrapping est : https://github.com/Mr99ail/Scraping_data.git
 
 ### Interfaces
 
-- Développé en utilisant JavaScript, HTML, CSS, Bootstrap et Font Awesome.
+- Développé en utilisant Flask, JavaScript, HTML, CSS, Bootstrap et Font Awesome.
 - Interfaces réactives incluant Accueil, Inscription, Connexion, Profil, Service, Détails du Service, Urgence et À Propos de Nous.
 
 ## Démarrage
